@@ -12,7 +12,7 @@ def main():
 
         # Bind the socket to the server
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind(("localhost", 8000))
+        sock.bind(("rpi1", 8000))
         sock.listen()
 
         # Socket accept() will block for a maximum of 1 second.  If you
