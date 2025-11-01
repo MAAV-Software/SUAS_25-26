@@ -4,7 +4,7 @@ import json
 
 
 def main():
-    """Test TCP Socket Client."""
+    """Test TCP Socket Client and test git access from RPi."""
     # create an INET, STREAMing socket, this is TCP
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
 
