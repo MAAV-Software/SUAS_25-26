@@ -9,7 +9,7 @@ def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
 
         # connect to the server
-        sock.connect(("localhost", 8000))
+        sock.connect(("rpi1", 8000))
 
         # send a message
         message = json.dumps({"hello": "world"})
