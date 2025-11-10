@@ -14,7 +14,9 @@ class ExploreDrone:
         self.port = port
         self.coords = coords
         self.startup = True
+        self.shutdown_flag = False
 
+        self.register()
         self.run_drone()
 
 
@@ -35,7 +37,7 @@ class ExploreDrone:
             # omit this, it blocks indefinitely, waiting for a connection.
             sock.settimeout(1)
 
-            while True:
+            while not self.shutdown_flag:
                 # Wait for a connection for 1s.  The socket library avoids consuming
                 # CPU while waiting for a connection.
                 try:
@@ -68,7 +70,6 @@ class ExploreDrone:
                 # Decode list-of-byte-strings to UTF8 and parse JSON data
                 message_bytes = b''.join(message_chunks)
                 message_str = message_bytes.decode("utf-8")
-                print(message_str)
 
                 try:
                     message_dict = json.loads(message_str)
@@ -89,6 +90,8 @@ class ExploreDrone:
 
     def send_coords(self):
         if self.coords.empty():
+            self.send_finished()
+            self.shutdown_flag = True
             return
         
         coord = self.coords.get()
@@ -97,6 +100,26 @@ class ExploreDrone:
             message = json.dumps({
                 "message_type": "coordinates",
                 "coords": coord
+            })
+            sock.sendall(message.encode('utf-8'))
+    
+    def register(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect(("rpi1", 8000))
+            message = json.dumps({
+                "message_type": "registration",
+                "drone_host": self.host,
+                "drone_port": self.port
+            })
+            sock.sendall(message.encode('utf-8'))
+
+    def send_finished(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect(("rpi1", 8000))
+            message = json.dumps({
+                "message_type": "finished",
+                "drone_host": self.host,
+                "drone_port": self.port
             })
             sock.sendall(message.encode('utf-8'))
         
