@@ -12,6 +12,9 @@ class MainDrone:
         self.host = host
         self.port = port
         self.coords = []
+        self.exp_drones = {}
+        self.finished_drones = 0
+        self.shutdown_flag = False
 
         self.run_drone()
 
@@ -28,7 +31,7 @@ class MainDrone:
             # omit this, it blocks indefinitely, waiting for a connection.
             sock.settimeout(1)
 
-            while True:
+            while not self.shutdown_flag:
                 # Wait for a connection for 1s.  The socket library avoids consuming
                 # CPU while waiting for a connection.
                 try:
@@ -72,6 +75,10 @@ class MainDrone:
     def handle_message(self, message_dict):
         if message_dict["message_type"] == "coordinates":
             self.handle_coordinates(message_dict)
+        elif message_dict["message_type"] == "registration":
+            self.handle_registration(message_dict)
+        elif message_dict["message_type"] == "finished":
+            self.handle_finished(message_dict)
         else:
             print("Message Unknown")
         
@@ -85,6 +92,29 @@ class MainDrone:
             })
             sock.sendall(message.encode('utf-8'))
             print(self.coords)
+    
+    def handle_registration(self, message_dict):
+        drone_host = message_dict["drone_host"]
+        drone_port = message_dict["drone_port"]
+        drone_key = str(drone_host) + str(drone_port)
+        self.exp_drones[drone_key] = {
+            "drone_host": drone_host,
+            "drone_port": drone_port,
+            "status": "working"
+        }
+
+    def handle_finished(self, message_dict):
+        drone_host = message_dict["drone_host"]
+        drone_port = message_dict["drone_port"]
+        drone_key = str(drone_host) + str(drone_port)
+        if self.exp_drones[drone_key]["status"] == "working":
+            self.exp_drones[drone_key]["status"] = "finished"
+            self.finished_drones += 1
+            if self.finished_drones == len(self.exp_drones):
+                self.shutdown_flag = True
+        else:
+            print("Error: Received a 'finished' message from a finished worker")
+            exit(1)
 
     def run_drone(self):
         tcp_thread = threading.Thread(target=self.tcp_server)
