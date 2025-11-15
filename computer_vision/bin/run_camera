@@ -1,0 +1,6 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+echo "Running Python script!"
+python3 picture.py
+echo "Finished running python script!"
