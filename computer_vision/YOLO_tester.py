@@ -29,11 +29,12 @@ def print_output(bounding_boxes):
         print("x min: ", x_min, " ", "y_min: ", y_min, " ", "x_max: ", x_max, " ", "y_max: ", y_max, " ")
 
 # Load the YOLO world model
-model_path = "/Users/dervint/Desktop/Clubs/MAAV/SUAS_24-25/computer_vision/yolov8s-world.pt"
+model_path = "/home/maav/IARC_mission10/computer_vision/yolov8s-world.pt"
 model = YOLOWorld(model_path)
 
-image_path = input("Enter Image path here: ") # Get the image that we want from the user
-Blur = input("Do you want to blur (Yes/No): ") # Ask the user if they want to apply blurring
+image_path = "/home/maav/IARC_mission10/computer_vision/output_images/captured_image.jpg" # Output from the camera script
+
+Blur = "No" # Ask the user if they want to apply blurring
 if Blur == "Yes":
     Gaussian = input("Do you want to use Gaussian (Yes/No): ") # Ask the user if they want to use Gaussian Blurring
     if Gaussian == "Yes":

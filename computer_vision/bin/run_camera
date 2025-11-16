@@ -1,12 +1,15 @@
 #!/bin/bash
+
 set -Eeuo pipefail
-
-if [! -d "env"]; then
-	python3 -m venv env
-fi
-
-source env/bin/activate
+set -x
 
 echo "Running Python script!"
 python3 picture.py
 echo "Finished running python script!"
+
+if [ ! -d "env" ]; then
+	python3 -m venv --system-site-packages env
+fi
+
+source env/bin/activate
+python3 YOLO_tester.py
