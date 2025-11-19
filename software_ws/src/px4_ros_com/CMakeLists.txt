@@ -69,6 +69,11 @@ add_executable(mfly_test src/examples/offboard/mfly_test.cpp)
 ament_target_dependencies(mfly_test rclcpp px4_msgs)
 install(TARGETS mfly_test DESTINATION lib/${PROJECT_NAME})
 
+# examples/offboard/circular_trajectory
+add_executable(circular_trajectory src/examples/offboard/circular_trajectory.cpp)
+ament_target_dependencies(circular_trajectory rclcpp px4_msgs)
+install(TARGETS circular_trajectory DESTINATION lib/${PROJECT_NAME})
+
 # examples/offboard/offboard_control_srv
 add_executable(offboard_control_srv src/examples/offboard/offboard_control_srv.cpp)
 ament_target_dependencies(offboard_control_srv rclcpp px4_msgs)

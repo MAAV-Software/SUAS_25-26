@@ -28,6 +28,10 @@ ros2 run px4_ros_com offboard_control
 
 ---------------------------------------------------
 
+All the code we actually run for navigation is in software_ws/src/px4_ros_com/src/exampls/offboard
+
+---------------------------------------------------
+
 Run gazebo with sdf (world) file
 1. cd int PX4-Autopilot
 2. PX4_GZ_WORLD=<world name here> make px4_sitl gz_x500
